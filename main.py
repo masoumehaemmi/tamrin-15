@@ -38,23 +38,23 @@ def help(message):
 @mybot.message_handler(commands=["game"])
 def game(message ):
      play= mybot.reply_to(message , "اومدیم با هم بازی حدس اعداد انجام بدیم؟ یه عددبین 1 تا 20 انتخاب کن و بزن بریم" )
-     mybot.register_next_step_handler(play , new_game )
+     mybot.register_next_step_handler(play , Game )
     
 
 # @mybot.message_handler( func=lambda  message:True)
-def new_game(message):
+def Game(message):
     global number
     if int(message.text) == number:
         mybot.reply_to(message ,"درست حدس زدی.آفرین")
-        global game
+        global Game
         
     elif int(message.text ) > number:
         mybot.reply_to(message ,"برو پایین")
-
+        mybot.register_next_step_handler(message , Game)
 
     elif int(message.text) < number :
         mybot.reply_to(message ,"برو بالا")
-
+        mybot.register_next_step_handler(message , Game)
     # else: 
     #     mybot.send_message(message , " دفت کن و عدد درست انتخاب کن")
 
@@ -78,6 +78,9 @@ def Voice(message):
     language = "en"
     my_voice = gTTS(text=mytext,lang=language ,slow=False)
     my_voice.save("voice.mp3")
+    voice1 = open('voice.mp3', 'rb')
+    mybot.send_voice(message.chat.id ,voice1)
+    
   
 
 @mybot.message_handler(commands=["qrcode"])
